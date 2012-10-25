@@ -1,0 +1,43 @@
+﻿<!DOCTYPE>
+<html>
+<head>
+    <title></title>
+    <link href="Content/style.css" rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script src="scripts/jquery.tmpl.min.js"></script>
+    <script src="scripts/jquery.form.js"></script>
+    <script src="scripts/jquery.dataTables.min.js"></script>
+
+</head>
+<body>
+<script>
+    $(document).ready(function () {
+        var options = {
+            dataType: "json",
+            resetForm: true,
+            success: ProcessResults
+        };
+        $("#search_form").ajaxForm(options);
+    });
+    function ProcessResults(responseText, statusText, xhr, $form) {
+        $("#results_container").html("<table class='tablesorter' id='tablesorter'><thead><tr><th>Filename</th><th>ItemType</th><th>FilePath</th></tr></thead><tbody></tbody></table>");
+        var markup = "<tr><td>${FileName}</td><td>${ItemType}</td><td>${FilePath}</td></tr>";
+        $.template("search_results", markup);
+        $.tmpl("search_results", responseText).appendTo("table tbody");
+        $("#tablesorter").dataTable({
+            "oLanguage": {
+                "sUrl": "Content/dataTable_language_PT_BR.txt"
+            }
+        });
+    }
+</script>
+<form id="search_form" method="post" action="/search">
+<input type="text" name="keyword" />
+<input type="submit" value="Procurar"/>
+</form>
+<div id="results_container"></div>
+</body>
+</html>
+
+
+
